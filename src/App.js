@@ -11,13 +11,10 @@ import {
 } from 'react-router-dom';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
-import useSupabase from './hooks/useSupabase';
 import { useToast } from '@chakra-ui/react';
-import { fetchNotes } from './supaservice';
 
 const Root = () => {
   const toast = useToast();
-
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState({
     username: '',
@@ -33,7 +30,6 @@ const Root = () => {
     const {
       data: { subscription },
     } = supabaseClient.auth.onAuthStateChange((event, session) => {
-      // console.log(session);
       // const { data: signedInUser } = await supabaseClient.auth.gey();
       if (event === 'SIGNED_IN') {
         const userId = session?.user.id;
@@ -45,7 +41,7 @@ const Root = () => {
           });
       }
       if (event === 'SIGNED_OUT') navigate('/login');
-      // if (!session) navigate('/login');
+      if (!session) navigate('/login');
       setSession(session);
       // console.log(session);
     });
@@ -55,19 +51,7 @@ const Root = () => {
     session && getUserProfile();
   }, [session]);
 
-  // if (!session) {
-  //   return (
-  //     <Login/>
-  //   );
-  // } else {
-  //   return (
-  //     <Home uuid={session?.user?.id} />
-  //   );
-  // }
-
   async function getUserProfile() {
-    // const { data } = await supabaseClient.auth.getUser();
-    // setUser(data.user);
     supabaseClient
       .from('profiles')
       .select('*')
@@ -86,29 +70,14 @@ const Root = () => {
       });
     // console.log(data);
   }
-  // const [allNotes, setAllNotes] = useState();
-  // const [loading, setLoading] = useState(true);
-  const { loading, data: notes, error } = useSupabase(fetchNotes);
-  // useEffect(() => {
-  //   setAllNotes(notes);
-  //   console.log(notes);
-    // setLoading(loading);
-    if (error) {
-      toast({
-        description: error.message,
-        status: 'error',
-        variant: 'left-accent',
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  // }, [notes]);
+
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          session?.user ? (
+      {session && (
+        <Route
+          path="/"
+          element={
+            // session?.user ? (
             <Home
               user={session?.user}
               profile={{
@@ -117,15 +86,14 @@ const Root = () => {
                 id: session?.user.id,
               }}
               setProfile={setProfile}
-              allNotes={notes}
-              loading={loading}
               toast={toast}
             />
-          ) : (
-            Login
-          )
-        }
-      />
+            // ) : (
+            //   <Login/>
+            // )
+          }
+        />
+      )}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       {session?.user && (

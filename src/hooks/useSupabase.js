@@ -40,7 +40,7 @@ const useSupabase = supaCall => {
         { event: '*', schema: 'public', table: 'todos' },
         payload => {
           if (payload.eventType === 'INSERT') {
-            console.log(payload.new);
+            // console.log(payload.new);
             // data ? setData([...data, payload.new]) : setData([payload.new]);
             setData((privData)=>[...privData, payload.new])
  
@@ -51,7 +51,7 @@ const useSupabase = supaCall => {
             );
             setData(filteredData);
           }
-          console.log('Change received!', payload);
+          // console.log('Change received!', payload);
         }
       )
       .subscribe();

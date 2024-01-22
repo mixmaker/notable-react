@@ -13,10 +13,21 @@ import DeleteButton from '../components/DeleteButton';
 import NoteModal from '../components/NoteModal';
 import { supabaseClient } from '../supabase';
 import { useNavigate } from 'react-router-dom';
+import useSupabase from '../hooks/useSupabase';
+import { fetchNotes } from '../supaservice';
 
-function Home({ user, profile, allNotes, loading, toast }) {
+function Home({ user, profile, toast }) {
   const navigate = useNavigate();
-
+  const { loading, data: notes, error } = useSupabase(fetchNotes);
+  if (error) {
+    toast({
+      description: error.message,
+      status: 'error',
+      variant: 'left-accent',
+      duration: 3000,
+      isClosable: true,
+    });
+  }
   const [inputtext, setInputtext] = useState({
     title: null,
     description: null,
@@ -62,17 +73,17 @@ function Home({ user, profile, allNotes, loading, toast }) {
         /> */}
         {loading ? (
           <Text mt={10}>Loading...</Text>
-        ) : !allNotes || !allNotes.length ? (
+        ) : !notes || !notes.length ? (
           <Center mt={10}>
             <Text>No notes to show</Text>
           </Center>
         ) : (
           <VStack listStyleType="none" mt={5}>
-            {allNotes.map(item => NoteItem({ item, toast }))}
+            {notes.map(item => NoteItem({ item, toast }))}
           </VStack>
         )}
         <Button mt={6} onClick={() => setModalIsOpen(!modalIsOpen)}>
-          add new
+          Add new note
         </Button>
         <NoteModal
           modalIsOpen={modalIsOpen}
@@ -90,7 +101,7 @@ function Home({ user, profile, allNotes, loading, toast }) {
 const NoteItem = ({ item, toast }) => (
   <HStack
     key={item.id}
-    w="300px"
+    w="400px"
     py={3}
     px={4}
     mr={2}
@@ -101,7 +112,7 @@ const NoteItem = ({ item, toast }) => (
     justifyContent="space-between"
   >
     <VStack>
-      <Text>{item.title}</Text>
+      <Text fontSize="xl">{item.title}</Text>
       <Text>{item.description}</Text>
     </VStack>
     <DeleteButton item={item} toast={toast} />

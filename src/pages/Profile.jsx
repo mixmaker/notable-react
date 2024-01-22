@@ -74,6 +74,7 @@ const Profile = ({ profile, setProfile }) => {
     const { data, error: publicURLError } = supabaseClient.storage
       .from('avatars')
       .getPublicUrl(fileName);
+      console.log(data)
     if (publicURLError) {
       setIsImageUploadLoading(false);
       console.log('publicURLError', publicURLError);
