@@ -1,4 +1,4 @@
-import { IconButton } from '@chakra-ui/react';
+import { Button, IconButton } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import {supabaseClient} from '../supabase';
 import { FaTrash } from 'react-icons/fa';
@@ -20,15 +20,15 @@ const DeleteButton = ({ item, toast }) => {
   }
 
   return (
-    <IconButton
-      ml={5}
+    <Button
+      // ml={5}
       isLoading={loading}
-      icon={<FaTrash />}
-      size="s"
+      // icon={<FaTrash />}
+      // size="s"
       onClick={() => deleteNote({ id: item.id, toast })}
     >
       delete
-    </IconButton>
+    </Button>
   );
 };
 

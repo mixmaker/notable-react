@@ -12,8 +12,8 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { supabaseClient } from '../supabase';
-import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
+import { FaChevronLeft } from 'react-icons/fa';
 
 const Profile = ({ profile, setProfile }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -96,7 +96,7 @@ const Profile = ({ profile, setProfile }) => {
       <Box mt="8" maxW="xl" mx="auto">
         <IconButton
           aria-label="back"
-          icon={<ChevronLeftIcon />}
+          icon={<FaChevronLeft />}
           onClick={() => navigate(-1)}
         />
         <Flex align="center" justify="center" direction="column">
@@ -108,12 +108,12 @@ const Profile = ({ profile, setProfile }) => {
           <FormLabel
             htmlFor="file-input"
             my="5"
-            borderRadius="2xl"
-            borderWidth="1px"
+            borderRadius="lg"
+            // borderWidth="1px"
             textAlign="center"
             p="2"
             bg="blue.400"
-            color="white"
+            // color="white"
           >
             {isImageUploadLoading ? 'Uploading.....' : 'Upload Profile Picture'}
           </FormLabel>
@@ -178,7 +178,7 @@ const Profile = ({ profile, setProfile }) => {
               }
             />
           </FormControl>
-          <Button colorScheme="blue" type="submit" isLoading={isLoading}>
+          <Button colorScheme='cyan' type="submit" isLoading={isLoading}>
             Update
           </Button>
         </Stack>

@@ -1,19 +1,27 @@
 import {
   Button,
-  Flex,
+  FormControl,
+  FormLabel,
   Input,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Textarea,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { supabaseClient } from '../supabase';
 
-const NoteModal = ({ inputtext, setInputtext, uuid, toast, modalIsOpen , setModalIsOpen}) => {
+const NoteModal = ({
+  inputtext,
+  setInputtext,
+  uuid,
+  toast,
+  modalIsOpen,
+  setModalIsOpen,
+}) => {
   const [loading, setLoading] = useState(false);
 
   async function addNote(e) {
@@ -57,37 +65,53 @@ const NoteModal = ({ inputtext, setInputtext, uuid, toast, modalIsOpen , setModa
     });
   }
   return (
-    <Modal isOpen={modalIsOpen} closeOnOverlayClick={true} onClose={() => {setModalIsOpen(false)}}>
+    <Modal
+      isOpen={modalIsOpen}
+      closeOnOverlayClick={true}
+      onClose={() => {
+        setModalIsOpen(false);
+      }}
+    >
       <ModalOverlay />
       <form onSubmit={addNote}>
         <ModalContent>
           <ModalHeader>Add a new note</ModalHeader>
-          {/* <ModalCloseButton /> */}
           <ModalBody>
-            {/* <Lorem count={2} /> */}
-            {/* <Flex flex="row"> */}
-            <Input
-              mb={4}
-              placeholder="Title"
-              value={inputtext.title}
-              onChange={e =>
-                setInputtext({ ...inputtext, title: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Description here"
-              value={inputtext.description}
-              onChange={e =>
-                setInputtext({ ...inputtext, description: e.target.value })
-              }
-            />
-            {/* </Flex> */}
+            <FormControl isRequired>
+              <FormLabel htmlFor="new-note-title">Title</FormLabel>
+              <Input
+                id="new-note-title"
+                mb={4}
+                placeholder="Title"
+                value={inputtext.title}
+                onChange={e =>
+                  setInputtext({ ...inputtext, title: e.target.value })
+                }
+              />
+              <FormLabel htmlFor="new-note-title">Description</FormLabel>
+              <Textarea
+                id="new-note-description"
+                height="200"
+                placeholder="Description here"
+                value={inputtext.description}
+                resize="none"
+                onChange={e =>
+                  setInputtext({ ...inputtext, description: e.target.value })
+                }
+              />
+            </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button mr={3} onClick={() => {setModalIsOpen(!modalIsOpen)}}>
+            <Button
+              variant="outline"
+              mr={3}
+              onClick={() => {
+                setModalIsOpen(!modalIsOpen);
+              }}
+            >
               Cancel
             </Button>
-            <Button variant="outline" type="submit" isLoading={loading}>
+            <Button type="submit" isLoading={loading}>
               Add note
             </Button>
           </ModalFooter>

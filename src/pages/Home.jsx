@@ -8,6 +8,14 @@ import {
   HStack,
   Button,
   Avatar,
+  useColorMode,
+  Card,
+  CardBody,
+  CardHeader,
+  CardFooter,
+  SimpleGrid,
+  Switch,
+  Progress,
 } from '@chakra-ui/react';
 import DeleteButton from '../components/DeleteButton';
 import NoteModal from '../components/NoteModal';
@@ -19,6 +27,7 @@ import { fetchNotes } from '../supaservice';
 function Home({ user, profile, toast }) {
   const navigate = useNavigate();
   const { loading, data: notes, error } = useSupabase(fetchNotes);
+  const { colorMode, toggleColorMode } = useColorMode();
   if (error) {
     toast({
       description: error.message,
@@ -35,27 +44,43 @@ function Home({ user, profile, toast }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   return (
     <Box height="100vh" pt={20}>
-      <Avatar
-        size="sm"
-        src={profile.avatarurl || ''}
-        name={user?.email}
+      <HStack
+        spacing={6}
         position="absolute"
-        top="6"
-        right="126"
-        cursor="pointer"
-        onClick={() => {
-          navigate('/profile');
-        }}
-      />
-      <Button
-        position="absolute"
-        variant="outline"
         top="4"
         right="6"
-        onClick={() => supabaseClient.auth.signOut()}
+        justifyContent="center"
       >
-        Log out
-      </Button>
+        <HStack>
+          <Text>Dark Mode</Text>
+          <Switch
+            value="true"
+            defaultChecked={colorMode === 'light' ? false : true}
+            onChange={toggleColorMode}
+          />
+        </HStack>
+        <Avatar
+          size="sm"
+          src={profile.avatarurl || ''}
+          name={user?.email}
+          // position="absolute"
+          // top="6"
+          // right="126"
+          cursor="pointer"
+          onClick={() => {
+            navigate('/profile');
+          }}
+        />
+        <Button
+          // position="absolute"
+          variant="outline"
+          // top="4"
+          // right="6"
+          onClick={() => supabaseClient.auth.signOut()}
+        >
+          Log out
+        </Button>
+      </HStack>
       <Center display="flex" flexDirection="column">
         <Heading
           fontSize="35px"
@@ -72,14 +97,29 @@ function Home({ user, profile, toast }) {
           uuid={uuid}
         /> */}
         {loading ? (
-          <Text mt={10}>Loading...</Text>
+          <>
+            {/* <Text mt={10}>Loading...</Text> */}
+            <Progress
+              mt={10}
+              width="80"
+              height="1"
+              isIndeterminate
+              borderRadius={18}
+            />
+          </>
         ) : !notes || !notes.length ? (
           <Center mt={10}>
             <Text>No notes to show</Text>
           </Center>
         ) : (
-          <VStack listStyleType="none" mt={5}>
-            {notes.map(item => NoteItem({ item, toast }))}
+          <VStack width="80%" listStyleType="none" mt={5}>
+            <SimpleGrid
+              width="100%"
+              gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))"
+              spacing={4}
+            >
+              {notes.map(item => NoteItem({ item, toast }))}
+            </SimpleGrid>
           </VStack>
         )}
         <Button mt={6} onClick={() => setModalIsOpen(!modalIsOpen)}>
@@ -99,23 +139,16 @@ function Home({ user, profile, toast }) {
 }
 
 const NoteItem = ({ item, toast }) => (
-  <HStack
-    key={item.id}
-    w="400px"
-    py={3}
-    px={4}
-    mr={2}
-    borderRadius={6}
-    // marginY={2}
-    bgColor="#f1f7f9"
-    display="flex"
-    justifyContent="space-between"
-  >
-    <VStack>
-      <Text fontSize="xl">{item.title}</Text>
+  <Card align="center" maxWidth="600" key={item.id}>
+    <CardHeader>
+      <Heading size="md">{item.title}</Heading>
+    </CardHeader>
+    <CardBody>
       <Text>{item.description}</Text>
-    </VStack>
-    <DeleteButton item={item} toast={toast} />
-  </HStack>
+    </CardBody>
+    <CardFooter>
+      <DeleteButton item={item} toast={toast} />
+    </CardFooter>
+  </Card>
 );
 export default Home;

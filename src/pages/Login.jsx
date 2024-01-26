@@ -7,6 +7,8 @@ import {
   FormLabel,
   Heading,
   Input,
+  InputGroup,
+  InputLeftElement,
   Stack,
   Text,
   chakra,
@@ -14,6 +16,10 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MdAlternateEmail } from 'react-icons/md';
+import { PiPassword } from 'react-icons/pi';
+import { FcGoogle } from 'react-icons/fc';
+import { FaGithub } from 'react-icons/fa';
 
 const Login = () => {
   const toast = useToast();
@@ -65,7 +71,7 @@ const Login = () => {
         px={10}
         boxShadow="rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px"
       >
-        <Text fontSize="18" mb={8}>
+        <Text fontSize="18" mb={4}>
           Log in to{' '}
           <Heading
             fontSize="35px"
@@ -76,31 +82,70 @@ const Login = () => {
             Notable
           </Heading>
         </Text>
+        <Box mb={6}>
+          <Button
+            mb={2}
+            w="full"
+            leftIcon={<FcGoogle size={20} />}
+            onClick={() =>
+              supabaseClient.auth.signInWithOAuth({
+                provider: 'google',
+              })
+            }
+          >
+            Continue with Google
+          </Button>
+          <Button
+            w="full"
+            leftIcon={<FaGithub size={20} />}
+            onClick={() =>
+              supabaseClient.auth.signInWithOAuth({
+                provider: 'github',
+              })
+            }
+          >
+            Continue with Github
+          </Button>
+        </Box>
         <chakra.form onSubmit={submitHandler}>
           <Stack spacing="6">
             <FormControl id="email">
               <FormLabel>Email address</FormLabel>
-              <Input
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={inputv.email}
-                onChange={e => setInputv({ ...inputv, email: e.target.value })}
-              />
+              <InputGroup>
+                <InputLeftElement>
+                  <MdAlternateEmail size={18} />
+                </InputLeftElement>
+                <Input
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  placeholder="john@example.com"
+                  value={inputv.email}
+                  onChange={e =>
+                    setInputv({ ...inputv, email: e.target.value })
+                  }
+                />
+              </InputGroup>
             </FormControl>
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
-              <Input
-                name="password"
-                type="password"
-                autoComplete="password"
-                required
-                value={inputv.password}
-                onChange={e =>
-                  setInputv({ ...inputv, password: e.target.value })
-                }
-              />
+              <InputGroup>
+                <InputLeftElement>
+                  <PiPassword size={18} />
+                </InputLeftElement>
+                <Input
+                  name="password"
+                  type="password"
+                  autoComplete="password"
+                  required
+                  placeholder="●●●●●●"
+                  value={inputv.password}
+                  onChange={e =>
+                    setInputv({ ...inputv, password: e.target.value })
+                  }
+                />
+              </InputGroup>
             </FormControl>
             <Button type="submit" size="lg" fontSize="md" isLoading={isLoading}>
               Sign in
@@ -108,7 +153,10 @@ const Login = () => {
           </Stack>
         </chakra.form>
         <Center mt={2}>
-          Don't have an account? <Button variant="text" onClick={()=>navigate('/register')} >Sign up</Button>
+          Don't have an account?{' '}
+          <Button variant="text" onClick={() => navigate('/register')}>
+            Register
+          </Button>
         </Center>
       </Box>
     </Center>

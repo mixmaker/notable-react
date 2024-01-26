@@ -1950,18 +1950,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/icons@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "@chakra-ui/icons@npm:2.1.1"
-  dependencies:
-    "@chakra-ui/icon": "npm:3.2.0"
-  peerDependencies:
-    "@chakra-ui/system": ">=2.0.0"
-    react: ">=18"
-  checksum: 30c8644e1e80a1d24ce5fa081673da726a2b26e7dc62fa90f318f478efdd4537ef31db4bf4f6d5afc76ad6d815fdb6a1b6a394a353fc4ba99af28cf9116a6186
-  languageName: node
-  linkType: hard
-
 "@chakra-ui/image@npm:2.1.0":
   version: 2.1.0
   resolution: "@chakra-ui/image@npm:2.1.0"
@@ -3912,37 +3900,6 @@ __metadata:
   dependencies:
     "@sinonjs/commons": "npm:^1.7.0"
   checksum: da50ddd68411617fcf72d9fb70b621aa2a6d17faa93a2769c7af390c88b40e045f84544db022dd1ac30a6db115d2a0f96473854d4a106b0174351f22d42910ce
-  languageName: node
-  linkType: hard
-
-"@stitches/core@npm:^1.2.8":
-  version: 1.2.8
-  resolution: "@stitches/core@npm:1.2.8"
-  checksum: bdee1772f033b20bfb1081a3bb8c3e85f2a44f381379d4c2ae21408336025e2d2578f79eec74db26824b852ebcc72de3edfc8c51418608f189aa5ffc26df667a
-  languageName: node
-  linkType: hard
-
-"@supabase/auth-ui-react@npm:^0.4.6":
-  version: 0.4.6
-  resolution: "@supabase/auth-ui-react@npm:0.4.6"
-  dependencies:
-    "@stitches/core": "npm:^1.2.8"
-    "@supabase/auth-ui-shared": "npm:0.1.8"
-    prop-types: "npm:^15.7.2"
-    react: "npm:^18.2.0"
-    react-dom: "npm:^18.2.0"
-  peerDependencies:
-    "@supabase/supabase-js": ^2.21.0
-  checksum: bade665018c1ba0e591592e7ba61bbfda5fefafe812a08f00ef8a6f0c0e508c567476a8f8860d62761f098ec7bd74d88dbce07e65d118ab55812e8307ee6e0f2
-  languageName: node
-  linkType: hard
-
-"@supabase/auth-ui-shared@npm:0.1.8, @supabase/auth-ui-shared@npm:^0.1.8":
-  version: 0.1.8
-  resolution: "@supabase/auth-ui-shared@npm:0.1.8"
-  peerDependencies:
-    "@supabase/supabase-js": ^2.21.0
-  checksum: 372fbbfb0205e04b748b39e500a835a82c5d0c27bdf4775667b629bc1588940fca0d7fbfab45a74a7744b3bb0a4e9db218731d7e00f2364b186f0ae361ddf256
   languageName: node
   linkType: hard
 
@@ -11078,12 +11035,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "notable@workspace:."
   dependencies:
-    "@chakra-ui/icons": "npm:^2.1.1"
     "@chakra-ui/react": "npm:latest"
     "@emotion/react": "npm:^11.0.0"
     "@emotion/styled": "npm:^11.0.0"
-    "@supabase/auth-ui-react": "npm:^0.4.6"
-    "@supabase/auth-ui-shared": "npm:^0.1.8"
     "@supabase/supabase-js": "npm:^2.39.1"
     "@testing-library/jest-dom": "npm:^5.16.4"
     "@testing-library/react": "npm:^13.0.1"
@@ -12536,7 +12490,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:

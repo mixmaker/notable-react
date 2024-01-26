@@ -8,12 +8,14 @@ const root = ReactDOM.createRoot(container);
 
 root.render(
   <StrictMode>
-    <ChakraBaseProvider theme={
+    <ChakraBaseProvider 
+    theme={
       extendTheme({
-        initialColorMode: "dark",
-        useSystemColorMode: true,
+        initialColorMode: "system",
+        useSystemColorMode: false,
       })
-    }>
+    }
+    >
       <ColorModeScript initialColorMode={theme.config.initialColorMode}/>
       <App />
     </ChakraBaseProvider>
