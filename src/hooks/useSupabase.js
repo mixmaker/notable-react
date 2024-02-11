@@ -50,7 +50,12 @@ const useSupabase = supaCall => {
           const filteredData = data?.filter(item => item.id !== payload.old.id);
           setData(filteredData);
         }
-        // console.log('Change received!', payload);
+        if (payload.eventType === 'UPDATE') {
+          let newArr = [...data];
+          const i =newArr?.findIndex(obj => obj.id === payload.old.id);
+          newArr[i] = payload.new;
+          setData(newArr);
+        }
       }
     )
     .subscribe();

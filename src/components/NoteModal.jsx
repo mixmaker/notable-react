@@ -15,15 +15,44 @@ import React, { useState } from 'react';
 import { supabaseClient } from '../supabase';
 
 const NoteModal = ({
+  editing,
   inputtext,
   setInputtext,
   uuid,
   toast,
   modalIsOpen,
   setModalIsOpen,
+  noteId,
+  setId
 }) => {
   const [loading, setLoading] = useState(false);
 
+  //edit note
+  async function editNote(e) {
+    e.preventDefault();
+    setLoading(true);
+    const { error } = await supabaseClient
+      .from('todos')
+      .update({
+        title: inputtext.title,
+        description: inputtext.description,
+      })
+      .eq('id', noteId)
+      .select();
+    setLoading(false);
+    setId(null);
+    setModalIsOpen(false);
+    setInputtext({ title: null, description: null });
+    toast({
+      description: error ? error.message : 'Note edited',
+      status: error ? 'error' : 'success',
+      variant: 'left-accent',
+      duration: 3000,
+      isClosable: true,
+    });
+  }
+
+  //add a new note
   async function addNote(e) {
     e.preventDefault();
     if (inputtext.title === null || inputtext.title === '')
@@ -64,6 +93,7 @@ const NoteModal = ({
       isClosable: true,
     });
   }
+
   return (
     <Modal
       isOpen={modalIsOpen}
@@ -73,7 +103,11 @@ const NoteModal = ({
       }}
     >
       <ModalOverlay />
-      <form onSubmit={addNote}>
+      <form
+        onSubmit={(e) => {
+          editing ? editNote(e) : addNote(e);
+        }}
+      >
         <ModalContent>
           <ModalHeader>Add a new note</ModalHeader>
           <ModalBody>
@@ -107,12 +141,13 @@ const NoteModal = ({
               mr={3}
               onClick={() => {
                 setModalIsOpen(!modalIsOpen);
+                setInputtext({ title: null, description: null });
               }}
             >
               Cancel
             </Button>
             <Button type="submit" isLoading={loading}>
-              Add note
+              {editing ? 'Save note' : 'Add note'}
             </Button>
           </ModalFooter>
         </ModalContent>

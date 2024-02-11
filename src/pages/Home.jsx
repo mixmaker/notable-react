@@ -23,6 +23,7 @@ import { supabaseClient } from '../supabase';
 import { useNavigate } from 'react-router-dom';
 import useSupabase from '../hooks/useSupabase';
 import { fetchNotes } from '../supaservice';
+import EditNote from '../components/EditNote';
 
 function Home({ user, profile, toast }) {
   const navigate = useNavigate();
@@ -41,7 +42,29 @@ function Home({ user, profile, toast }) {
     title: null,
     description: null,
   });
+  const [id, setId] = useState(null); //to track which note we're editing
   const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const NoteItem = ({ item }) => (
+    <Card align="center" maxWidth="600" key={item.id}>
+      <CardHeader>
+        <Heading size="md">{item.title}</Heading>
+      </CardHeader>
+      <CardBody>
+        <Text>{item.description}</Text>
+      </CardBody>
+      <CardFooter>
+        <EditNote
+          note={item}
+          setModalIsOpen={setModalIsOpen}
+          setId={setId}
+          setInputtext={setInputtext}
+        />
+        <DeleteButton item={item} toast={toast} />
+      </CardFooter>
+    </Card>
+  );
+
   return (
     <Box height="100vh" pt={20}>
       <HStack
@@ -123,32 +146,22 @@ function Home({ user, profile, toast }) {
           </VStack>
         )}
         <Button mt={6} onClick={() => setModalIsOpen(!modalIsOpen)}>
-          Add new note
+          Add new
         </Button>
         <NoteModal
+          editing={id}
           modalIsOpen={modalIsOpen}
           setModalIsOpen={setModalIsOpen}
           inputtext={inputtext}
           setInputtext={setInputtext}
           toast={toast}
           uuid={user.id}
+          noteId={id}
+          setId={setId}
         />
       </Center>
     </Box>
   );
 }
 
-const NoteItem = ({ item, toast }) => (
-  <Card align="center" maxWidth="600" key={item.id}>
-    <CardHeader>
-      <Heading size="md">{item.title}</Heading>
-    </CardHeader>
-    <CardBody>
-      <Text>{item.description}</Text>
-    </CardBody>
-    <CardFooter>
-      <DeleteButton item={item} toast={toast} />
-    </CardFooter>
-  </Card>
-);
 export default Home;
