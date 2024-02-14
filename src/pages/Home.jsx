@@ -106,7 +106,7 @@ function Home({ user, profile, toast }) {
       </HStack>
       <Center display="flex" flexDirection="column">
         <Heading
-          fontSize="35px"
+          fontSize="42px"
           mb={2}
           bgGradient="linear(to-tl, #eaeaff, #6666ff)"
           bgClip="text"

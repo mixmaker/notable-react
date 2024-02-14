@@ -15,7 +15,7 @@ import { supabaseClient } from '../supabase';
 import { useNavigate } from 'react-router-dom';
 import { FaChevronLeft } from 'react-icons/fa';
 
-const Profile = ({ profile, setProfile }) => {
+const Profile = ({ profile, setProfile, toast }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
   const navigate = useNavigate();
@@ -33,6 +33,15 @@ const Profile = ({ profile, setProfile }) => {
       .from('profiles')
       .update(body)
       .eq('id', userId);
+    if (error) {
+      toast({
+        description: error.message,
+        status: 'error',
+        variant: 'left-accent',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
     if (!error) {
       setProfile({
         ...profile,
@@ -74,7 +83,6 @@ const Profile = ({ profile, setProfile }) => {
     const { data, error: publicURLError } = supabaseClient.storage
       .from('avatars')
       .getPublicUrl(fileName);
-      console.log(data)
     if (publicURLError) {
       setIsImageUploadLoading(false);
       console.log('publicURLError', publicURLError);
@@ -178,7 +186,7 @@ const Profile = ({ profile, setProfile }) => {
               }
             />
           </FormControl>
-          <Button colorScheme='cyan' type="submit" isLoading={isLoading}>
+          <Button colorScheme="cyan" type="submit" isLoading={isLoading}>
             Update
           </Button>
         </Stack>

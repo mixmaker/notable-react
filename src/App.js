@@ -46,9 +46,11 @@ const Root = () => {
       // console.log(session);
     });
     return () => subscription.unsubscribe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     session && getUserProfile();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   async function getUserProfile() {
@@ -107,6 +109,7 @@ const Root = () => {
                 id: session?.user.id,
               }}
               setProfile={setProfile}
+              toast={toast}
             />
           }
         />
