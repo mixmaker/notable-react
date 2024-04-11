@@ -1,0 +1,25 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "public/*",
+            "use": "@vercel/build"
+        },
+        {
+            "src": "api/*",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/api/handler.js"
+        }
+    ],
+    "crons": [
+        {
+            "path": "/api/keepActive",
+            "schedule": "0 0 * * *"
+        }
+    ]
+}
