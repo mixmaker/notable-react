@@ -2,10 +2,6 @@
     "version": 2,
     "builds": [
         {
-            "src": "public/*",
-            "use": "@vercel/build"
-        },
-        {
             "src": "api/*",
             "use": "@vercel/node"
         }
