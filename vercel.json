@@ -6,12 +6,6 @@
             "use": "@vercel/node"
         }
     ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "/api/handler.js"
-        }
-    ],
     "crons": [
         {
             "path": "/api/keepActive",
