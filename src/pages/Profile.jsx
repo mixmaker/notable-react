@@ -186,7 +186,7 @@ const Profile = ({ profile, setProfile, toast }) => {
               }
             />
           </FormControl>
-          <Button colorScheme="cyan" type="submit" isLoading={isLoading}>
+          <Button colorScheme="brand" type="submit" isLoading={isLoading}>
             Update
           </Button>
         </Stack>

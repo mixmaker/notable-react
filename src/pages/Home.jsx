@@ -16,20 +16,23 @@ import {
   SimpleGrid,
   Switch,
   Progress,
+  useColorModeValue,
+  IconButton,
 } from '@chakra-ui/react';
 import DeleteButton from '../components/DeleteButton';
 import NoteModal from '../components/NoteModal';
 import { supabaseClient } from '../supabase';
 import { useNavigate } from 'react-router-dom';
-import useSupabase from '../hooks/useSupabase';
-import { fetchNotes } from '../supaservice';
 import EditNote from '../components/EditNote';
+import { useGetAllNotes } from '../api/queriesAndMutations';
+import { MdAdd } from 'react-icons/md';
+import { PiGhost } from 'react-icons/pi';
 
 function Home({ user, profile, toast }) {
   const navigate = useNavigate();
-  const { loading, data: notes, error } = useSupabase(fetchNotes);
+  const { data: notes, isLoading, isError, error } = useGetAllNotes();
   const { colorMode, toggleColorMode } = useColorMode();
-  if (error) {
+  if (isError && error) {
     toast({
       description: error.message,
       status: 'error',
@@ -44,14 +47,22 @@ function Home({ user, profile, toast }) {
   });
   const [id, setId] = useState(null); //to track which note we're editing
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const textColor = useColorModeValue(
+    'brand.textSecondaryLight',
+    'brand.textSecondaryDark'
+  );
+  const bgCardColor = useColorModeValue(
+    'brand.secondaryBgLight',
+    'brand.secondaryBgDark'
+  );
 
   const NoteItem = ({ item }) => (
-    <Card align="center" maxWidth="600" key={item.id}>
+    <Card align="center" maxWidth="600" key={item.id} bg={bgCardColor}>
       <CardHeader>
         <Heading size="md">{item.title}</Heading>
       </CardHeader>
       <CardBody>
-        <Text>{item.description}</Text>
+        <Text color={textColor}>{item.description}</Text>
       </CardBody>
       <CardFooter>
         <EditNote
@@ -77,6 +88,7 @@ function Home({ user, profile, toast }) {
         <HStack>
           <Text>Dark Mode</Text>
           <Switch
+            colorScheme="brand"
             value="true"
             defaultChecked={colorMode === 'light' ? false : true}
             onChange={toggleColorMode}
@@ -119,7 +131,7 @@ function Home({ user, profile, toast }) {
           toast={toast}
           uuid={uuid}
         /> */}
-        {loading ? (
+        {isLoading ? (
           <>
             {/* <Text mt={10}>Loading...</Text> */}
             <Progress
@@ -131,8 +143,9 @@ function Home({ user, profile, toast }) {
             />
           </>
         ) : !notes || !notes.length ? (
-          <Center mt={10}>
-            <Text>No notes to show</Text>
+          <Center mt={10} display="flex" flexDirection="column">
+            <PiGhost size={30} />
+            <Text>Boo, it's lonely in here...</Text>
           </Center>
         ) : (
           <VStack width="80%" listStyleType="none" mt={5}>
@@ -145,9 +158,15 @@ function Home({ user, profile, toast }) {
             </SimpleGrid>
           </VStack>
         )}
-        <Button mt={6} onClick={() => setModalIsOpen(!modalIsOpen)}>
-          Add new
-        </Button>
+        <IconButton
+          colorScheme="brand" // size={22}
+          position="fixed"
+          bottom="5%"
+          right="2%"
+          onClick={() => setModalIsOpen(!modalIsOpen)}
+          icon={<MdAdd size={22} />}
+        />
+
         <NoteModal
           editing={id}
           modalIsOpen={modalIsOpen}

@@ -12,6 +12,8 @@ import {
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import { useToast } from '@chakra-ui/react';
+import AuthLayout from './pages/AuthLayout';
+import { AnimatePresence } from 'framer-motion';
 
 const Root = () => {
   const toast = useToast();
@@ -46,11 +48,11 @@ const Root = () => {
       // console.log(session);
     });
     return () => subscription.unsubscribe();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     session && getUserProfile();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   async function getUserProfile() {
@@ -74,47 +76,51 @@ const Root = () => {
   }
 
   return (
-    <Routes>
-      {session && (
-        <Route
-          path="/"
-          element={
-            // session?.user ? (
-            <Home
-              user={session?.user}
-              profile={{
-                ...profile,
-                email: session?.user.email,
-                id: session?.user.id,
-              }}
-              setProfile={setProfile}
-              toast={toast}
-            />
-            // ) : (
-            //   <Login/>
-            // )
-          }
-        />
-      )}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      {session?.user && (
-        <Route
-          path="/profile"
-          element={
-            <Profile
-              profile={{
-                ...profile,
-                email: session?.user.email,
-                id: session?.user.id,
-              }}
-              setProfile={setProfile}
-              toast={toast}
-            />
-          }
-        />
-      )}
-    </Routes>
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes>
+        {session && (
+          <Route
+            path="/"
+            element={
+              // session?.user ? (
+              <Home
+                user={session?.user}
+                profile={{
+                  ...profile,
+                  email: session?.user.email,
+                  id: session?.user.id,
+                }}
+                setProfile={setProfile}
+                toast={toast}
+              />
+              // ) : (
+              //   <Login/>
+              // )
+            }
+          />
+        )}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} key="login" />
+          <Route path="/register" element={<Register />} key="register" />
+        </Route>
+        {session?.user && (
+          <Route
+            path="/profile"
+            element={
+              <Profile
+                profile={{
+                  ...profile,
+                  email: session?.user.email,
+                  id: session?.user.id,
+                }}
+                setProfile={setProfile}
+                toast={toast}
+              />
+            }
+          />
+        )}
+      </Routes>
+    </AnimatePresence>
   );
 };
 

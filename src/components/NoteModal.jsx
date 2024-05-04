@@ -10,9 +10,10 @@ import {
   ModalHeader,
   ModalOverlay,
   Textarea,
+  useColorModeValue,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import { supabaseClient } from '../supabase';
+import React from 'react';
+import { useAddNote, useEditNote } from '../api/queriesAndMutations';
 
 const NoteModal = ({
   editing,
@@ -23,37 +24,39 @@ const NoteModal = ({
   modalIsOpen,
   setModalIsOpen,
   noteId,
-  setId
+  setId,
 }) => {
-  const [loading, setLoading] = useState(false);
+  const addNote = useAddNote();
+  const editNote = useEditNote();
+  const textColor = useColorModeValue('gray.500', 'gray.400');
+  const bgCardColor = useColorModeValue(
+    'brand.secondaryBgLight',
+    'brand.secondaryBgDark'
+  );
 
   //edit note
-  async function editNote(e) {
+  async function clickEditHandler(e) {
     e.preventDefault();
-    setLoading(true);
-    const { error } = await supabaseClient
-      .from('todos')
-      .update({
-        title: inputtext.title,
-        description: inputtext.description,
-      })
-      .eq('id', noteId)
-      .select();
-    setLoading(false);
+    editNote.mutate({
+      title: inputtext.title,
+      description: inputtext.description,
+      noteId,
+    });
     setId(null);
     setModalIsOpen(false);
     setInputtext({ title: null, description: null });
-    toast({
-      description: error ? error.message : 'Note edited',
-      status: error ? 'error' : 'success',
-      variant: 'left-accent',
-      duration: 3000,
-      isClosable: true,
-    });
+    if (!editNote.isPending)
+      toast({
+        description: editNote.error ? editNote.error.message : 'Note saved',
+        status: editNote.error ? 'error' : 'success',
+        variant: 'left-accent',
+        duration: 3000,
+        isClosable: true,
+      });
   }
 
   //add a new note
-  async function addNote(e) {
+  async function clickAddHandler(e) {
     e.preventDefault();
     if (inputtext.title === null || inputtext.title === '')
       return toast({
@@ -71,27 +74,21 @@ const NoteModal = ({
         duration: 3000,
         isClosable: true,
       });
-    setLoading(true);
-    const { error } = await supabaseClient
-      .from('todos')
-      .insert([
-        {
-          title: inputtext.title,
-          description: inputtext.description,
-          user_id: uuid,
-        },
-      ])
-      .select();
-    setInputtext({ title: null, description: null });
-    setLoading(false);
-    setModalIsOpen(false);
-    toast({
-      description: error ? error.message : 'Note added',
-      status: error ? 'error' : 'success',
-      variant: 'left-accent',
-      duration: 3000,
-      isClosable: true,
+    addNote.mutate({
+      title: inputtext.title,
+      description: inputtext.description,
+      uuid,
     });
+    setInputtext({ title: null, description: null });
+    setModalIsOpen(false);
+    if (!addNote.isPending)
+      toast({
+        description: addNote.error ? addNote.error.message : 'Note added',
+        status: addNote.error ? 'error' : 'success',
+        variant: 'left-accent',
+        duration: 3000,
+        isClosable: true,
+      });
   }
 
   return (
@@ -99,16 +96,18 @@ const NoteModal = ({
       isOpen={modalIsOpen}
       closeOnOverlayClick={true}
       onClose={() => {
+        setInputtext({ title: null, description: null });
+        setId(null);
         setModalIsOpen(false);
       }}
     >
       <ModalOverlay />
       <form
-        onSubmit={(e) => {
-          editing ? editNote(e) : addNote(e);
+        onSubmit={e => {
+          editing ? clickEditHandler(e) : clickAddHandler(e);
         }}
       >
-        <ModalContent>
+        <ModalContent bg={bgCardColor}>
           <ModalHeader>Add a new note</ModalHeader>
           <ModalBody>
             <FormControl isRequired>
@@ -118,6 +117,7 @@ const NoteModal = ({
                 mb={4}
                 placeholder="Title"
                 value={inputtext.title}
+                color={textColor}
                 onChange={e =>
                   setInputtext({ ...inputtext, title: e.target.value })
                 }
@@ -129,6 +129,7 @@ const NoteModal = ({
                 placeholder="Description here"
                 value={inputtext.description}
                 resize="none"
+                color={textColor}
                 onChange={e =>
                   setInputtext({ ...inputtext, description: e.target.value })
                 }
@@ -138,6 +139,7 @@ const NoteModal = ({
           <ModalFooter>
             <Button
               variant="outline"
+              colorScheme="gray"
               mr={3}
               onClick={() => {
                 setModalIsOpen(!modalIsOpen);
@@ -146,7 +148,11 @@ const NoteModal = ({
             >
               Cancel
             </Button>
-            <Button type="submit" isLoading={loading}>
+            <Button
+              colorScheme="brand"
+              type="submit"
+              isLoading={editing ? editNote.isPending : addNote.isPending}
+            >
               {editing ? 'Save note' : 'Add note'}
             </Button>
           </ModalFooter>

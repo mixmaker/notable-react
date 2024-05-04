@@ -20,6 +20,7 @@ import { MdAlternateEmail } from 'react-icons/md';
 import { PiPassword } from 'react-icons/pi';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
+import AnimatedLayout from '../components/AnimatedLayout';
 
 const Login = () => {
   const toast = useToast();
@@ -62,104 +63,100 @@ const Login = () => {
   };
 
   return (
-    <Center h="100vh">
-      <Box
-        w="400px"
-        border="0.5px solid #969696"
-        borderRadius={10}
-        py={12}
-        px={10}
-        boxShadow="rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px"
+    <AnimatedLayout>
+      <Heading
+        fontSize="35px"
+        mb={2}
+        bgGradient="linear(to-tl, #eaeaff, #6666ff)"
+        bgClip="text"
+        fontWeight="bold"
       >
-        <Text fontSize="18" mb={4}>
-          Log in to{' '}
-          <Heading
-            fontSize="35px"
-            mb={2}
-            bgGradient="linear(to-tl, #eaeaff, #6666ff)"
-            bgClip="text"
-          >
-            Notable
-          </Heading>
-        </Text>
-        <Box mb={6}>
-          <Button
-            mb={2}
-            w="full"
-            leftIcon={<FcGoogle size={20} />}
-            onClick={() =>
-              supabaseClient.auth.signInWithOAuth({
-                provider: 'google',
-              })
-            }
-          >
-            Continue with Google
-          </Button>
-          <Button
-            w="full"
-            leftIcon={<FaGithub size={20} />}
-            onClick={() =>
-              supabaseClient.auth.signInWithOAuth({
-                provider: 'github',
-              })
-            }
-          >
-            Continue with Github
-          </Button>
-        </Box>
-        <chakra.form onSubmit={submitHandler}>
-          <Stack spacing="6">
-            <FormControl id="email">
-              <FormLabel>Email address</FormLabel>
-              <InputGroup>
-                <InputLeftElement>
-                  <MdAlternateEmail size={18} />
-                </InputLeftElement>
-                <Input
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  placeholder="john@example.com"
-                  value={inputv.email}
-                  onChange={e =>
-                    setInputv({ ...inputv, email: e.target.value })
-                  }
-                />
-              </InputGroup>
-            </FormControl>
-            <FormControl id="password">
-              <FormLabel>Password</FormLabel>
-              <InputGroup>
-                <InputLeftElement>
-                  <PiPassword size={18} />
-                </InputLeftElement>
-                <Input
-                  name="password"
-                  type="password"
-                  autoComplete="password"
-                  required
-                  placeholder="●●●●●●"
-                  value={inputv.password}
-                  onChange={e =>
-                    setInputv({ ...inputv, password: e.target.value })
-                  }
-                />
-              </InputGroup>
-            </FormControl>
-            <Button type="submit" size="lg" fontSize="md" isLoading={isLoading}>
-              Sign in
-            </Button>
-          </Stack>
-        </chakra.form>
-        <Center mt={2}>
-          Don't have an account?{' '}
-          <Button variant="text" onClick={() => navigate('/register')}>
-            Register
-          </Button>
-        </Center>
+        Notable
+      </Heading>
+      <Text fontSize="18" mb={4}>
+        Welcome Back
+      </Text>
+      <Box mb={6}>
+        <Button
+          mb={2}
+          w="full"
+          leftIcon={<FcGoogle size={20} />}
+          onClick={() =>
+            supabaseClient.auth.signInWithOAuth({
+              provider: 'google',
+            })
+          }
+        >
+          Continue with Google
+        </Button>
+        <Button
+          w="full"
+          leftIcon={<FaGithub size={20} />}
+          onClick={() =>
+            supabaseClient.auth.signInWithOAuth({
+              provider: 'github',
+            })
+          }
+        >
+          Continue with Github
+        </Button>
       </Box>
-    </Center>
+      <chakra.form onSubmit={submitHandler}>
+        <Stack spacing="6">
+          <FormControl id="email">
+            <FormLabel>Email address</FormLabel>
+            <InputGroup>
+              <InputLeftElement>
+                <MdAlternateEmail size={18} />
+              </InputLeftElement>
+              <Input
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                placeholder="john@example.com"
+                value={inputv.email}
+                onChange={e => setInputv({ ...inputv, email: e.target.value })}
+              />
+            </InputGroup>
+          </FormControl>
+          <FormControl id="password">
+            <FormLabel>Password</FormLabel>
+            <InputGroup>
+              <InputLeftElement>
+                <PiPassword size={18} />
+              </InputLeftElement>
+              <Input
+                name="password"
+                type="password"
+                autoComplete="password"
+                required
+                placeholder="●●●●●●"
+                value={inputv.password}
+                onChange={e =>
+                  setInputv({ ...inputv, password: e.target.value })
+                }
+              />
+            </InputGroup>
+          </FormControl>
+          <Button
+            colorScheme="brand"
+            type="submit"
+            size="lg"
+            fontSize="md"
+            isLoading={isLoading}
+          >
+            Sign in
+          </Button>
+        </Stack>
+      </chakra.form>
+      <Center mt={2}>
+        Don't have an account?{' '}
+        <Button variant="text" onClick={() => navigate('/register')}>
+          Register
+        </Button>
+      </Center>
+    </AnimatedLayout>
   );
 };
 

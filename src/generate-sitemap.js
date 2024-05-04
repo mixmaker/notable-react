@@ -12,7 +12,9 @@ const links = [
 ];
 
 // Create a stream to write to
-const stream = new SitemapStream({ hostname: 'https://your-website.com' });
+const stream = new SitemapStream({
+  hostname: 'https://notable-react.vercel.app',
+});
 
 // Write sitemap to file
 streamToPromise(Readable.from(links).pipe(stream)).then(data => {
